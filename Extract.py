@@ -1,7 +1,7 @@
 '''
 Extractor utility for windows
 Creator: Shubham Tambere
-Bash script location:-   C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\SendTo\
+ Script location:-   C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\SendTo\
 '''
 import os
 from sys import argv, exit
@@ -16,6 +16,7 @@ Extentions=[ 'zip', 'tar','gz']
 
 def extract_tar(fileName, extractLocation=None):
     extractLocation = fileName.rsplit('\\',1)[0]
+    print("Extracting...")
     tar = tarfile.open(fileName+'.'+'tar.gz')
     tar.extractall(extractLocation)
     tar.close()
@@ -23,10 +24,14 @@ def extract_tar(fileName, extractLocation=None):
 def extract_zip(fileName, extractLocation=None):
     extractLocation = fileName.rsplit('\\',1)[0]
     #ctypes.windll.user32.MessageBoxA(0, "Unzipping at:"+extractLocation, "Error", 1)
+    print("Extracting...")
     zip = ZipFile(fileName+'.'+'zip')
     zip.extractall(extractLocation)
 
 def api_extract(fileName,extention):
+    if(fileName.endswith('.tar')):
+        fileName=fileName[:-4]
+        extention='tar'
     methods={
         'zip':extract_zip,
         'tar':extract_tar
@@ -39,8 +44,6 @@ def process(completeFileName):
     print fileNameList
     fileName=fileNameList[0]
     extention=fileNameList[1]
-    ctypes.windll.user32.MessageBoxA(0, fileName, "Error", 1)
-    ctypes.windll.user32.MessageBoxA(0, extention, "Error", 1)
     if extention not in Extentions:
         ctypes.windll.user32.MessageBoxA(0, "Extention not supported!", "Error", 1)
         exit(1)
